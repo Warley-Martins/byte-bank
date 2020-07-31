@@ -15,18 +15,18 @@ namespace ByteBank
         private List<ContaCorrente> contas = new List<ContaCorrente>();
         private ContaCorrente ContaGenerica;
 
-        public void Cadastrar(string titular, int senha)
+        public void Cadastrar(string nome, string cpf, int senha)
         {
-            ContaGenerica = new ContaCorrente(titular, senha);
+            ContaGenerica = new ContaCorrente(nome, cpf, senha);
             contas.Add(ContaGenerica);
             ContaGenerica.printarDados();
         }
 
-        public int Login(string titular, int senha)
+        public int Login(string cpf, int senha)
         {
             int tamList = contas.Count;
             for (int i = 0; i < tamList; i++)
-                if (contas[i].Titular == titular && contas[i].Senha == senha)
+                if (contas[i].Titular.CPF == cpf && contas[i].Senha == senha)
                     return i;
             return -1;
         }
@@ -54,12 +54,12 @@ namespace ByteBank
             return false;
         }
 
-        public int acharPessoa(int agencia, int conta, string titularTransferencia)
+        public int acharPessoa(int agencia, int conta, string CpftitularTransferencia)
         {
             int tamList = contas.Count;
             for (int i = 0; i < tamList; i++)
             {
-                if (contas[i].Agencia == agencia && contas[i].Conta == conta && contas[i].Titular == titularTransferencia)
+                if (contas[i].Agencia == agencia && contas[i].Conta == conta && contas[i].Titular.CPF == CpftitularTransferencia)
                 {
                     contas[i].printarDadosTransferencia();
                     return i;

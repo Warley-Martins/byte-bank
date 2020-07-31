@@ -23,8 +23,9 @@ namespace ByteBank
             int opcaoTransferencia;
             int indiceTransferencia;
 
-            string titularTransferencia;
+            string CpftitularTransferencia;
             string titular;
+            string cpf;
 
             do
             {
@@ -50,13 +51,15 @@ namespace ByteBank
                                     Console.WriteLine("\nAs senhas nao correspondem, tente novamente!");
                             } while (senha != testeSenha);
 
-                            caixaEletronico.Cadastrar(titular, senha);
+                        Console.Write("Digite seu cpf: ");
+                        cpf = Console.ReadLine();
+                            caixaEletronico.Cadastrar(titular, cpf, senha);
                         }
                         else if (opcaoCadastro == 0)
                             return;
 
                         Console.Write("\nLogin:\n" +
-                                      "Titular: ");
+                                      "Cpf: ");
                         titular = Console.ReadLine();
 
                         Console.Write("Senha: ");
@@ -122,18 +125,18 @@ namespace ByteBank
                                 Console.Write("\nDigite o numero da conta: ");
                                 conta = int.Parse(Console.ReadLine());
 
-                                Console.Write("\nDigite o nome do titular: ");
-                                titularTransferencia = Console.ReadLine();
+                                Console.Write("\nDigite o Cpf do titular: ");
+                                CpftitularTransferencia = Console.ReadLine();
 
                                 Console.WriteLine("\nDigite o valor da transferencia: ");
 
                                 valorTransferencia = int.Parse(Console.ReadLine());
 
-                                indiceTransferencia = caixaEletronico.acharPessoa(agencia, conta, titularTransferencia);
+                                indiceTransferencia = caixaEletronico.acharPessoa(agencia, conta, CpftitularTransferencia);
 
                                 if (indiceTransferencia == -1)
                                 {
-                                    Console.WriteLine("\nEssa nao esta cadastrada no sistema");
+                                    Console.WriteLine("\nEssa conta nao esta cadastrada no sistema");
                                     do
                                     {
                                         Console.WriteLine("\nDigite: (1) Digitar novamente (0) Sair\n" +
