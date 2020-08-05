@@ -9,73 +9,72 @@ namespace ByteBank
     {
         public CaixaEletronico()
         {
-
+            contas = new List<ContaCorrente>();
         }
 
-        private List<ContaCorrente> contas = new List<ContaCorrente>();
-        private ContaCorrente ContaGenerica;
+        private List<ContaCorrente> contas;
 
-        public void Cadastrar(string nome, string cpf, int senha)
+        public void Cadastrar(Cliente titular, int senha)
         {
-            ContaGenerica = new ContaCorrente(nome, cpf, senha);
+            ContaCorrente ContaGenerica = new ContaCorrente(titular, senha);
             contas.Add(ContaGenerica);
-            ContaGenerica.printarDados();
+            ContaGenerica.PrintarDados();
         }
 
-        public int Login(string cpf, int senha)
+
+        /*   Na junção dos codigos utilizar interface IAutenticar ou ILogar   */
+        public ContaCorrente Login(string cpfTestado, int senha)
         {
-            int tamList = contas.Count;
-            for (int i = 0; i < tamList; i++)
-                if (contas[i].Titular.CPF == cpf && contas[i].Senha == senha)
-                    return i;
-            return -1;
+            foreach (var contacorrente in contas)
+                if (contacorrente.Titular.CPF == cpfTestado && contacorrente.Senha == senha)
+                    return contacorrente;
+            return null;
         }
 
-        public void VerSaldo(int i)
+        public void VerSaldo(ContaCorrente usuario)
         {
-            Console.WriteLine($"\nConta: {contas[i].Agencia} {contas[i].Conta}\n" +
-                              $"Saldo: R${contas[i].Saldo}");
+            Console.WriteLine($"\nConta: {usuario.Agencia} {usuario.Conta}\n" +
+                              $"Saldo: R${usuario.Saldo}");
         }
 
-        public void Depositar(int i, int valorDeposito)
+        public void Depositar(ContaCorrente usuario, int valorDeposito)
         {
-            contas[i].Saldo += valorDeposito;
-            Console.WriteLine($"\nConta: {contas[i].Agencia} {contas[i].Conta}\n" +
-                              $"Novo saldo: R${contas[i].Saldo}");
+            usuario.Saldo += valorDeposito;
+            Console.WriteLine($"\nConta: {usuario.Agencia} {usuario.Conta}\n" +
+                              $"Novo saldo: R${usuario.Saldo}");
         }
 
-        public bool Sacar(int i, int valorSaque)
+        public bool Sacar(ContaCorrente usuario, int valorSaque)
         {
-            if (contas[i].Saldo >= valorSaque)
+            if (usuario.Saldo >= valorSaque)
             {
-                contas[i].Saldo -= valorSaque;
+                usuario.Saldo -= valorSaque;
                 return true;
             }
             return false;
         }
 
-        public int acharPessoa(int agencia, int conta, string CpftitularTransferencia)
+        public ContaCorrente ProcurarDestinatario(int agencia, int conta, string cpfTitularTransferencia)
         {
-            int tamList = contas.Count;
-            for (int i = 0; i < tamList; i++)
+            foreach(var usuario in contas)
             {
-                if (contas[i].Agencia == agencia && contas[i].Conta == conta && contas[i].Titular.CPF == CpftitularTransferencia)
+                if (usuario.Agencia == agencia && usuario.Conta == conta && usuario.Titular.CPF == cpfTitularTransferencia)
                 {
-                    contas[i].printarDadosTransferencia();
-                    return i;
+                    usuario.PrintarDadosTransferencia();
+                    return usuario;
                 }
             }
-            return -1;
+            return null;
         }
 
-        public void Transferencia(int i, int i2, int valorTransferencia)
+        public void Transferencia(ContaCorrente origem, ContaCorrente destinatario, int valorTransferencia)
         {
-            if (contas[i].Saldo >= valorTransferencia)
+            if (origem.Saldo >= valorTransferencia)
             {
-                contas[i].Saldo -= valorTransferencia;
-                contas[i2].Saldo += valorTransferencia;
-                Console.WriteLine($"\nConta: {contas[i].Agencia} {contas[i].Conta}\n" +
-                                  $"Novo saldo: R${contas[i].Saldo}");
+                Sacar(origem, valorTransferencia);
+                Depositar(destinatario, valorTransferencia);
+                Console.WriteLine($"\nConta: {origem.Agencia} {origem.Conta}\n" +
+                                  $"Novo saldo: R${origem.Saldo}");
             }
             else
                 Console.WriteLine("\nNao ha saldo disponivel!");

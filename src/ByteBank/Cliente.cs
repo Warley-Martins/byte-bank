@@ -4,9 +4,12 @@ using System.Text;
 
 namespace ByteBank
 {
-    class Cliente
+    public class Cliente
     {
-        
+        public Cliente()
+        {
+
+        }
         public Cliente(string nome, string cpf)
         {
             this.Nome = nome;
